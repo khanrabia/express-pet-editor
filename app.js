@@ -44,6 +44,32 @@ app.get('/pets', (req, res) => {
   res.redirect('/')
 })
 
+app.use("/home/:id/", (req,res)=> {
+  let addPet = pets.find(pet => pet.id === parseInt(req.params.id))
+  if(addPet || req.params.id === "new"){
+    req.addPet = addPet;
+    next()
+  } else{
+    res.render("notfound.ejs", {name: "NOT FOUND"});
+  }
+
+})
+
+app.put("/home/:id" ,(req, res)=> {
+  let {name, species, age, notes, likes} = req.body;
+
+  req.addPet.name = name;
+  req.addPet.species = species;
+  req.addPet.age = age;
+  req.addPet.notes = notes;
+  req.addPet.likes = likes;
+
+})
+
+app.patch("/home/:id", (req, res) => {
+  req.addPet.done = !req.addPet.done;
+  res.redirect(`/home/${req.params.id}`)
+})
 app.get("*", (req, res) => {
   res.render("notfound.ejs", {title: "Not Found"})
 })
